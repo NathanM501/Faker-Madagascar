@@ -24,19 +24,19 @@ class FakerMadagascarServiceProvider extends ServiceProvider
         );
 
         // Optional FakerPHP bridge: only wired when fakerphp/faker is
-        // installed. Binds a shared Faker generator if the app doesn't
-        // already have one, then auto-registers the Malagasy provider on it.
-        // The extender runs at resolution time, so it also applies when
-        // Laravel binds its own generator.
+        // installed. Laravel's fake() helper binds its generators under
+        // suffixed keys (Faker\Generator:en_US, :fr_FR, ...) and does NOT
+        // use a Faker\Generator binding, so a plain extend(Generator::class)
+        // never sees it. A global afterResolving hook decorates every Faker
+        // Generator the container resolves, under any key. The idempotence
+        // guard prevents attaching the provider twice to the same generator.
         if (class_exists(Factory::class) && class_exists(Generator::class)) {
-            if (! $this->app->bound(Generator::class)) {
-                $this->app->singleton(Generator::class, fn () => Factory::create());
-            }
-
-            $this->app->extend(Generator::class, function (Generator $faker, $app) {
-                $faker->addProvider($app->make(MalagasyProvider::class));
-
-                return $faker;
+            $this->app->afterResolving(function ($object, $app) {
+                if ($object instanceof Generator) {
+                    if (! in_array($app->make(MalagasyProvider::class), $object->getProviders(), true)) {
+                        $object->addProvider($app->make(MalagasyProvider::class));
+                    }
+                }
             });
         }
 
@@ -59,6 +59,6 @@ class FakerMadagascarServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../config/faker-madagascar.php' => config_path('faker-madagascar.php'),
-        ], 'config');
+        ], 'faker-madagascar-config');
     }
 }
