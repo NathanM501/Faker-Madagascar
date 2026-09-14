@@ -1,0 +1,12 @@
+{
+    "first_name": {
+        "prefixes": ["Andri", "Hanta", "Rado", "Join", "Tovo", "Koto", "Fan", "Man", "Ran", "Tsi", "Vo", "Ma", "Ha", "Ra", "No"],
+        "middles": ["na", "ri", "ta", "lo", "ri", "va", "mi", "si", "ka", "ni", "la", "fa", "jo", "ho", "tsi"],
+        "suffixes": ["na", "ry", "to", "na", "lo", "ri", "vo", "na", "ry", "ni", "so", "ra", "na", "ti", "ka"]
+    },
+    "last_name": {
+        "prefixes": ["Andrian", "Rabe", "Rak", "Rand", "Ras", "Rav", "Raja", "Tsi", "Fan", "Man", "Vo", "Ha", "Ma"],
+        "middles": ["a", "i", "o", "e", "an", "in", "en", "on", "ar", "ir", "or", "el", "al"],
+        "suffixes": ["na", "ny", "to", "vo", "la", "ri", "ka", "na", "ry", "so", "ra", "na", "ti", "ka"]
+    }
+}

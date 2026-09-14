@@ -1,0 +1,67 @@
+{
+  "name": "manguithre/faker-madagascar",
+  "description": "Localized fake data generator for Madagascar, inspired by FakerPHP.",
+  "keywords": [
+    "laravel",
+    "faker",
+    "madagascar",
+    "generator",
+    "localized"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Manguithre",
+      "email": "eugene.manguithre@gmail.com"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+    "illuminate/validation": "^10.0|^11.0|^12.0|^13.0",
+    "illuminate/console": "^10.0|^11.0|^12.0|^13.0"
+  },
+  "suggest": {
+    "fakerphp/faker": "Required to expose the malagasy* methods on Faker's Generator (^1.21)."
+  },
+  "require-dev": {
+    "fakerphp/faker": "^1.21",
+    "pestphp/pest": "^3.0|^4.0|^5.0",
+    "pestphp/pest-plugin-laravel": "^2.0|^3.0|^4.0|^5.0",
+    "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Manguithre\\FakerMadagascar\\": "src/"
+    },
+    "files": [
+      "src/helpers.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Manguithre\\FakerMadagascar\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Manguithre\\FakerMadagascar\\FakerMadagascarServiceProvider"
+      ],
+      "aliases": {
+        "FakerMg": "Manguithre\\FakerMadagascar\\Facades\\FakerMg"
+      }
+    }
+  },
+  "scripts": {
+    "test": "pest"
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

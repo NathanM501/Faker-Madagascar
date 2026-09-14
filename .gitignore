@@ -1,0 +1,18 @@
+# Source data downloaded from julkwel/madagascar-map (see build-geography.php)
+/_source/
+
+# Composer
+/vendor/
+composer.lock
+
+# Local phpunit config (ship phpunit.xml.dist only)
+/phpunit.xml
+
+# Logs and local artifacts
+*.log
+/.build-data/
+/.freebuff/
+
+# Misc
+.DS_Store
+Thumbs.db
