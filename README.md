@@ -3,7 +3,7 @@
 [![Tests](https://github.com/NathanM501/Faker-Madagascar/actions/workflows/tests.yml/badge.svg)](https://github.com/NathanM501/Faker-Madagascar/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D8.2-blue.svg)](https://www.php.net/)
-[![Laravel](https://img.shields.io/badge/laravel-10%7C11%7C12%7C13-red.svg)](https://laravel.com)
+[![Laravel](https://img.shields.io/badge/laravel-11%7C12%7C13-red.svg)](https://laravel.com)
 
 A Laravel package for generating realistic fake data for Madagascar — addresses
 (23 regions, 119 districts, 1 704 communes, 19 328 real fokontany), Malagasy
@@ -13,7 +13,7 @@ if you know `fake()`, you already know how to use it.
 ## Requirements
 
 - PHP 8.2+
-- Laravel 10, 11, 12 or 13
+- Laravel 11, 12 or 13
 - Optionally [FakerPHP](https://github.com/fakerphp/faker) `^1.21` for the `fake()->malagasy*()` bridge (Composer installs it automatically if missing)
 
 ## Installation
@@ -36,7 +36,7 @@ $address = fakerMg()->address();
 echo $address;              // Alakamisy Fenoarivo, Antananarivo Atsimondrano, ANALAMANGA, Ankadivory
 echo fakerMg()->fullName(); // e.g. Jarinala Rabeantoandro
 echo fakerMg()->phoneNumber(); // e.g. 0321234567
-echo fakerMg()->cin();         // e.g. 01010001
+echo fakerMg()->cin();         // e.g. 123456789012
 ```
 
 ## Usage styles
@@ -57,7 +57,7 @@ fakerMg()->fullName();
 // Contact
 fakerMg()->phoneNumber();          // 10 digits, starts with 0
 fakerMg()->phoneNumber('telma');   // 034 / 038 only
-fakerMg()->cin();                  // respects the cin_format config
+fakerMg()->cin();                  // e.g. 123456789012
 ```
 
 Works in routes, controllers, seeders, factories, tinker and commands.
@@ -70,9 +70,6 @@ use FakerMg; // no import needed on Laravel 11+, where aliases are global
 FakerMg::address();
 FakerMg::phoneNumber();
 ```
-
-On Laravel 10, add the alias to `config/app.php` if it was not published
-automatically: `'FakerMg' => Manguithre\FakerMadagascar\Facades\FakerMg::class`.
 
 ### Via dependency injection
 
@@ -156,8 +153,8 @@ fakerMg()->phoneNumber();            // e.g. 0321234567
 fakerMg()->phoneNumber('airtel');    // 033 / 035 only
 fakerMg()->phonePrefixes();          // ['032', '033', '034', '035', '037', '038', '039']
 
-// CIN (Carte d'Identité Nationale): BUREAU_YEAR_SEQUENCE
-fakerMg()->cin();                    // e.g. 01010001 or 01-01-0001 (per cin_format config)
+// CIN (Carte d'Identité Nationale): 12 digits, no separators
+fakerMg()->cin();                    // e.g. 123456789012
 ```
 
 Prefixes are verified against the [ARTEC national numbering plan](https://www.artec.mg/plan-national-de-numerotation/),
@@ -228,7 +225,8 @@ $request->validate([
 
 - `MalagasyPhoneNumber` accepts separators and the +261 country code
   (e.g. `+261 32 12 345 67`, `032 12 345 67`) and validates the operator prefix.
-- `MalagasyCin` validates the 8-digit bureau/year/sequence structure.
+- `MalagasyCin` validates the real 12-digit CIN format (separators typed by
+  users — spaces, dashes, dots — are tolerated and stripped).
 
 ## Artisan command
 
@@ -260,9 +258,6 @@ php artisan vendor:publish --tag=faker-madagascar-config
 return [
     // Restrict generation to specific regions. Empty = all 23 regions.
     'active_regions' => [],
-
-    // CIN format: 'compact' (01010001), 'separated' (01-01-0001), 'auto' (random per call)
-    'cin_format' => 'auto',
 ];
 ```
 

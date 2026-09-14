@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Manguithre\FakerMadagascar\Generators;
 
 use Manguithre\FakerMadagascar\Data\PhonePrefixRepository;
-use Manguithre\FakerMadagascar\Support\Config;
 
 class ContactGenerator
 {
@@ -33,20 +32,13 @@ class ContactGenerator
 
     public function cin(): string
     {
-        $config = Config::get('cin_format', 'auto');
+        // The real Malagasy CIN is a 12-digit number with no separators (XXXXXXXXXXXX).
+        $cin = '';
 
-        $format = $config === 'auto' ? ['compact', 'separated'][random_int(0, 1)] : $config;
+        for ($i = 0; $i < 12; $i++) {
+            $cin .= random_int(0, 9);
+        }
 
-        $bureau = str_pad((string) random_int(1, 22), 2, '0', STR_PAD_LEFT);
-        $year = str_pad((string) random_int(0, 99), 2, '0', STR_PAD_LEFT);
-        $sequence = str_pad((string) random_int(0, 9999), 4, '0', STR_PAD_LEFT);
-
-        $cin = $bureau . $year . $sequence;
-
-        return match ($format) {
-            'separated' => substr($cin, 0, 2) . '-' . substr($cin, 2, 2) . '-' . substr($cin, 4, 4),
-            'compact' => $cin,
-            default => throw new \InvalidArgumentException("Invalid cin_format config: $format"),
-        };
+        return $cin;
     }
 }

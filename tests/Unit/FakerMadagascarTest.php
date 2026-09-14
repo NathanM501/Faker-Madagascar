@@ -67,13 +67,11 @@ final class FakerMadagascarTest extends TestCase
     #[Test]
     public function it_generates_contact_data(): void
     {
-        config(['faker-madagascar.cin_format' => 'compact']);
-
         $phone = $this->faker->phoneNumber();
 
         $this->assertTrue(PhonePrefixRepository::isValidPrefix($phone));
         $this->assertSame(10, strlen($phone));
-        $this->assertMatchesRegularExpression('/^[0-9]{8}$/', $this->faker->cin());
+        $this->assertMatchesRegularExpression('/^[0-9]{12}$/', $this->faker->cin());
     }
 
     #[Test]

@@ -54,32 +54,11 @@ final class ContactGeneratorTest extends TestCase
     }
 
     #[Test]
-    public function it_generates_a_valid_cin_compact(): void
+    public function it_generates_a_valid_cin(): void
     {
-        config(['faker-madagascar.cin_format' => 'compact']);
-
-        $cin = $this->generator->cin();
-
-        $this->assertMatchesRegularExpression('/^[0-9]{8}$/', $cin);
-    }
-
-    #[Test]
-    public function it_generates_a_valid_cin_separated(): void
-    {
-        config(['faker-madagascar.cin_format' => 'separated']);
-
-        $cin = $this->generator->cin();
-
-        $this->assertMatchesRegularExpression('/^[0-9]{2}-[0-9]{2}-[0-9]{4}$/', $cin);
-    }
-
-    #[Test]
-    public function it_throws_for_invalid_cin_format_config(): void
-    {
-        config(['faker-madagascar.cin_format' => 'bogus']);
-
-        $this->expectException(\InvalidArgumentException::class);
-
-        $this->generator->cin();
+        // Real Malagasy CIN: 12 digits, no separators (XXXXXXXXXXXX).
+        for ($i = 0; $i < 20; $i++) {
+            $this->assertMatchesRegularExpression('/^[0-9]{12}$/', $this->generator->cin());
+        }
     }
 }

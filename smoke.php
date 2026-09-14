@@ -95,9 +95,12 @@ if ($faker instanceof FakerMadagascar) {
     check(PhonePrefixRepository::isValidPrefix($faker->phoneNumber('airtel')), 'operator filter (airtel) works', $ok, $fail, $failures);
     check(ruleErrors(new MalagasyPhoneNumber, $phones[0]) === [], 'generated phone passes its own validation rule', $ok, $fail, $failures);
     check(count(ruleErrors(new MalagasyCin, $faker->cin())) === 0, 'generated CIN passes its own validation rule', $ok, $fail, $failures);
+    check(preg_match('/^\\d{12}$/', $cinExample = $faker->cin()) === 1, 'CIN is exactly 12 digits, no separators', $ok, $fail, $failures);
+    check(ruleErrors(new MalagasyCin, '1234-5678-9012') === [], 'rule tolerates separators typed by users', $ok, $fail, $failures);
+    check(ruleErrors(new MalagasyCin, '12345678') !== [], 'rule rejects the old 8-digit format', $ok, $fail, $failures);
     check(ruleErrors(new MalagasyPhoneNumber, '+261 32 12 345 67') === [], 'rule accepts +261 international form', $ok, $fail, $failures);
     check(ruleErrors(new MalagasyPhoneNumber, '0311234567') !== [], 'rule rejects invalid prefix 031', $ok, $fail, $failures);
-    echo "  Exemple: " . $phones[0] . " / " . $faker->cin() . "\n";
+    echo "  Exemple: " . $phones[0] . " / " . $cinExample . "\n";
 }
 
 echo "\n=== 5. Securite ===\n";

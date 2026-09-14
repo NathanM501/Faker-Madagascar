@@ -19,16 +19,4 @@ return [
 
     'active_regions' => [],
 
-    /*
-    |--------------------------------------------------------------------------
-    | CIN Format
-    |--------------------------------------------------------------------------
-    |
-    | Format of generated CIN numbers: 'compact' (8 digits, e.g. 01010001),
-    | 'separated' (e.g. 01-01-0001) or 'auto' (random pick per call).
-    |
-    */
-
-    'cin_format' => 'auto',
-
 ];
