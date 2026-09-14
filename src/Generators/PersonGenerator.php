@@ -8,7 +8,9 @@ use Manguithre\FakerMadagascar\Data\NameSyllableRepository;
 
 class PersonGenerator
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function firstName(): string
     {

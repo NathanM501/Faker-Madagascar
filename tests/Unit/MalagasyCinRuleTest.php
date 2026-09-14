@@ -16,7 +16,7 @@ final class MalagasyCinRuleTest extends TestCase
     {
         parent::setUp();
 
-        $this->rule = new MalagasyCin;
+        $this->rule = new MalagasyCin();
     }
 
     #[Test]
@@ -58,7 +58,9 @@ final class MalagasyCinRuleTest extends TestCase
     {
         $errors = [];
 
-        ($this->rule->validate('cin', $value, function (string $m) use (&$errors): void { $errors[] = $m; }));
+        ($this->rule->validate('cin', $value, function (string $m) use (&$errors): void {
+            $errors[] = $m;
+        }));
 
         $this->assertSame([], $errors, $message);
     }
@@ -67,7 +69,9 @@ final class MalagasyCinRuleTest extends TestCase
     {
         $errors = [];
 
-        ($this->rule->validate('cin', $value, function (string $m) use (&$errors): void { $errors[] = $m; }));
+        ($this->rule->validate('cin', $value, function (string $m) use (&$errors): void {
+            $errors[] = $m;
+        }));
 
         $this->assertNotEmpty($errors, $message);
     }

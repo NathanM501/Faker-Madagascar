@@ -8,7 +8,9 @@ use Manguithre\FakerMadagascar\Data\PhonePrefixRepository;
 
 class ContactGenerator
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 
     public function phoneNumber(?string $operator = null): string
     {
@@ -23,7 +25,7 @@ class ContactGenerator
         $prefix = $prefixes[array_rand($prefixes)];
         $body = '';
 
-        for ($i = 0; $i < 7; $i++) {
+        for ($i = 0; $i < 7; ++$i) {
             $body .= random_int(0, 9);
         }
 
@@ -35,7 +37,7 @@ class ContactGenerator
         // The real Malagasy CIN is a 12-digit number with no separators (XXXXXXXXXXXX).
         $cin = '';
 
-        for ($i = 0; $i < 12; $i++) {
+        for ($i = 0; $i < 12; ++$i) {
             $cin .= random_int(0, 9);
         }
 

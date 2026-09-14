@@ -10,8 +10,8 @@ class MalagasyCin implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        if (! is_string($value)) {
-            $fail("The :attribute field must be a string.");
+        if (!is_string($value)) {
+            $fail('The :attribute field must be a string.');
 
             return;
         }
@@ -21,7 +21,7 @@ class MalagasyCin implements ValidationRule
         $digits = preg_replace('/\D/', '', $value);
 
         if (strlen($digits) !== 12) {
-            $fail("The :attribute field must contain exactly 12 digits.");
+            $fail('The :attribute field must contain exactly 12 digits.');
         }
     }
 }

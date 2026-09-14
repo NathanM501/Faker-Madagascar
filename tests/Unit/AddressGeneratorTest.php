@@ -7,8 +7,8 @@ namespace Manguithre\FakerMadagascar\Tests\Unit;
 use Manguithre\FakerMadagascar\Data\GeographyRepository;
 use Manguithre\FakerMadagascar\Exceptions\InvalidArgumentException;
 use Manguithre\FakerMadagascar\Generators\AddressGenerator;
-use Manguithre\FakerMadagascar\ValueObjects\MalagasyAddress;
 use Manguithre\FakerMadagascar\Tests\TestCase;
+use Manguithre\FakerMadagascar\ValueObjects\MalagasyAddress;
 use PHPUnit\Framework\Attributes\Test;
 
 final class AddressGeneratorTest extends TestCase
@@ -19,7 +19,7 @@ final class AddressGeneratorTest extends TestCase
     {
         parent::setUp();
 
-        $this->generator = new AddressGenerator(new GeographyRepository);
+        $this->generator = new AddressGenerator(new GeographyRepository());
     }
 
     #[Test]
@@ -133,7 +133,7 @@ final class AddressGeneratorTest extends TestCase
     {
         config(['faker-madagascar.active_regions' => ['ANALAMANGA']]);
 
-        for ($i = 0; $i < 10; $i++) {
+        for ($i = 0; $i < 10; ++$i) {
             $this->assertSame('ANALAMANGA', $this->generator->address()->region);
         }
     }

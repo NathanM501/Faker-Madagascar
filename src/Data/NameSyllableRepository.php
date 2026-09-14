@@ -47,7 +47,7 @@ class NameSyllableRepository
     {
         $section = self::all()[$type] ?? null;
 
-        if (! is_array($section)) {
+        if (!is_array($section)) {
             throw new \UnexpectedValueException("Unknown name type: $type");
         }
 

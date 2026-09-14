@@ -30,7 +30,7 @@ class PreviewCommand extends Command
 
         $rows = [];
 
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $rows[] = match ($type) {
                 'person' => [
                     'First name' => $this->fakerMadagascar->firstName(),

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Manguithre\FakerMadagascar\Tests\Feature;
 
 use Faker\Generator;
-use Manguithre\FakerMadagascar\Faker\MalagasyProvider;
 use Manguithre\FakerMadagascar\FakerMadagascar;
 use Manguithre\FakerMadagascar\FakerMadagascarServiceProvider;
 use Manguithre\FakerMadagascar\Generators\AddressGenerator;

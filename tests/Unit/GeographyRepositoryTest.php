@@ -17,7 +17,7 @@ final class GeographyRepositoryTest extends TestCase
     {
         parent::setUp();
 
-        $this->repository = new GeographyRepository;
+        $this->repository = new GeographyRepository();
     }
 
     #[Test]

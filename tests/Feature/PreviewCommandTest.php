@@ -95,7 +95,7 @@ final class PreviewCommandTest extends TestCase
 
     private function extractExportPath(string $output): string
     {
-        if (! preg_match('/Exported to (.+)/', trim($output), $matches)) {
+        if (!preg_match('/Exported to (.+)/', trim($output), $matches)) {
             $this->fail("Could not find export path in output: $output");
         }
 

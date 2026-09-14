@@ -17,7 +17,7 @@ final class MalagasyPhoneNumberRuleTest extends TestCase
     {
         parent::setUp();
 
-        $this->rule = new MalagasyPhoneNumber;
+        $this->rule = new MalagasyPhoneNumber();
     }
 
     #[Test]
@@ -65,7 +65,9 @@ final class MalagasyPhoneNumberRuleTest extends TestCase
     {
         $errors = [];
 
-        ($this->rule->validate('phone', $value, function (string $m) use (&$errors): void { $errors[] = $m; }));
+        ($this->rule->validate('phone', $value, function (string $m) use (&$errors): void {
+            $errors[] = $m;
+        }));
 
         $this->assertSame([], $errors, $message);
     }
@@ -74,7 +76,9 @@ final class MalagasyPhoneNumberRuleTest extends TestCase
     {
         $errors = [];
 
-        ($this->rule->validate('phone', $value, function (string $m) use (&$errors): void { $errors[] = $m; }));
+        ($this->rule->validate('phone', $value, function (string $m) use (&$errors): void {
+            $errors[] = $m;
+        }));
 
         $this->assertNotEmpty($errors, $message);
     }

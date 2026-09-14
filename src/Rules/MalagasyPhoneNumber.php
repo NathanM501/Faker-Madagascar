@@ -11,7 +11,7 @@ class MalagasyPhoneNumber implements ValidationRule
 {
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        if (! is_string($value)) {
+        if (!is_string($value)) {
             $fail('The :attribute field must be a string.');
 
             return;
@@ -24,13 +24,13 @@ class MalagasyPhoneNumber implements ValidationRule
             $digits = '0' . substr($digits, 3);
         }
 
-        if (strlen($digits) !== 10 || ! str_starts_with($digits, '0')) {
+        if (strlen($digits) !== 10 || !str_starts_with($digits, '0')) {
             $fail('The :attribute field is not a valid Malagasy phone number.');
 
             return;
         }
 
-        if (! PhonePrefixRepository::isValidPrefix($digits)) {
+        if (!PhonePrefixRepository::isValidPrefix($digits)) {
             $fail('The :attribute field has an invalid Malagasy mobile prefix.');
         }
     }

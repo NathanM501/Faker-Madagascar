@@ -30,7 +30,9 @@ final class ContactGeneratorTest extends TestCase
         $this->assertTrue(PhonePrefixRepository::isValidPrefix($phone), "Invalid prefix generated: $phone");
 
         $errors = [];
-        (new MalagasyPhoneNumber)->validate('phone', $phone, function (string $m) use (&$errors): void { $errors[] = $m; });
+        (new MalagasyPhoneNumber())->validate('phone', $phone, function (string $m) use (&$errors): void {
+            $errors[] = $m;
+        });
 
         $this->assertSame([], $errors, "Generated phone failed the validation rule: $phone");
     }
@@ -57,7 +59,7 @@ final class ContactGeneratorTest extends TestCase
     public function it_generates_a_valid_cin(): void
     {
         // Real Malagasy CIN: 12 digits, no separators (XXXXXXXXXXXX).
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 20; ++$i) {
             $this->assertMatchesRegularExpression('/^[0-9]{12}$/', $this->generator->cin());
         }
     }

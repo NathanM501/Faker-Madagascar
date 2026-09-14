@@ -51,7 +51,7 @@ final class PersonGeneratorTest extends TestCase
     {
         $names = [];
 
-        for ($i = 0; $i < 20; $i++) {
+        for ($i = 0; $i < 20; ++$i) {
             $names[] = $this->generator->fullName();
         }
 

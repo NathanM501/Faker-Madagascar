@@ -12,6 +12,7 @@ composer.lock
 *.log
 /.build-data/
 /.freebuff/
+/.php-cs-fixer.cache
 
 # Misc
 .DS_Store

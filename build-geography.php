@@ -28,15 +28,15 @@ $byRegionCommune = [];
 $byCommuneOnly = [];
 
 foreach ($src as $region => $communes) {
-    if (! is_array($communes)) {
+    if (!is_array($communes)) {
         continue;
     }
     foreach ($communes as $entries) {
-        if (! is_array($entries)) {
+        if (!is_array($entries)) {
             continue;
         }
         foreach ($entries as $e) {
-            if (! is_array($e)) {
+            if (!is_array($e)) {
                 continue;
             }
             $fk = trim((string) ($e['fokontany'] ?? ''));
@@ -47,7 +47,7 @@ foreach ($src as $region => $communes) {
             }
             $nr = $normalize($r);
             $nc = $normalize($c);
-            $byRegionCommune[$nr.'|'.$nc][$fk] = true;
+            $byRegionCommune[$nr . '|' . $nc][$fk] = true;
             $byCommuneOnly[$nc][$fk] = true;
         }
     }
@@ -63,28 +63,28 @@ foreach ($geo['regions'] as $regionName => &$regionNode) {
 
     // NB : pas de "?? []" ici — il créerait une copie temporaire et les
     // écritures par référence se perdraient (bug constaté).
-    if (! isset($regionNode['districts']) || ! is_array($regionNode['districts'])) {
+    if (!isset($regionNode['districts']) || !is_array($regionNode['districts'])) {
         continue;
     }
 
     foreach ($regionNode['districts'] as &$districtNode) {
-        if (! isset($districtNode['communes']) || ! is_array($districtNode['communes'])) {
+        if (!isset($districtNode['communes']) || !is_array($districtNode['communes'])) {
             continue;
         }
 
         foreach ($districtNode['communes'] as $communeName => &$communeNode) {
-            $communesTotal++;
+            ++$communesTotal;
             $nc = $normalize((string) $communeName);
 
-            $candidates = $byRegionCommune[$nr.'|'.$nc]
+            $candidates = $byRegionCommune[$nr . '|' . $nc]
                 ?? $byCommuneOnly[$nc]
                 ?? [];
 
             if ($candidates !== []) {
                 $communeNode['fokontany'] = array_keys($candidates);
-                $replaced++;
+                ++$replaced;
             } else {
-                $communesMisses++;
+                ++$communesMisses;
                 if (count($missingSample) < 8) {
                     $missingSample[] = "$regionName / $communeName";
                 }
@@ -98,12 +98,12 @@ unset($regionNode);
 
 if ($communesMisses > 0) {
     fwrite(STDERR, "ATTENTION : $communesMisses communes sans fokontany dans la source.\n");
-    fwrite(STDERR, 'Exemples : '.implode(' | ', $missingSample)."\n");
+    fwrite(STDERR, 'Exemples : ' . implode(' | ', $missingSample) . "\n");
 }
 
 $json = json_encode($geo, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES);
 file_put_contents($geoPath, $json);
 
 echo "Communes enrichies : $replaced / $communesTotal\n";
-echo 'Fokontany distincts au total : '.count($byRegionCommune ? array_merge(...array_values(array_map('array_keys', $byRegionCommune))) : [])."\n";
-echo 'Taille du fichier final : '.round(strlen((string) $json) / 1024 / 1024, 2)." Mo\n";
+echo 'Fokontany distincts au total : ' . count($byRegionCommune ? array_merge(...array_values(array_map('array_keys', $byRegionCommune))) : []) . "\n";
+echo 'Taille du fichier final : ' . round(strlen((string) $json) / 1024 / 1024, 2) . " Mo\n";

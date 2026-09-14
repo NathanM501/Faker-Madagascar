@@ -6,7 +6,6 @@ namespace Manguithre\FakerMadagascar\Data;
 
 use Manguithre\FakerMadagascar\Exceptions\InvalidArgumentException;
 use Manguithre\FakerMadagascar\Support\Config;
-use UnexpectedValueException;
 
 class GeographyRepository
 {
@@ -20,8 +19,8 @@ class GeographyRepository
         if (self::$cache === null) {
             $file = __DIR__ . '/../../resources/data/geography.json';
 
-            if (! file_exists($file)) {
-                throw new UnexpectedValueException("Geography data file not found: $file");
+            if (!file_exists($file)) {
+                throw new \UnexpectedValueException("Geography data file not found: $file");
             }
 
             self::$cache = json_decode((string) file_get_contents($file), true, 512, JSON_THROW_ON_ERROR);
@@ -86,7 +85,7 @@ class GeographyRepository
         $regions = $this->regions();
 
         if ($regions === []) {
-            throw new UnexpectedValueException('No active regions available in geography data.');
+            throw new \UnexpectedValueException('No active regions available in geography data.');
         }
 
         return $regions[array_rand($regions)];
@@ -97,7 +96,7 @@ class GeographyRepository
         $districts = $this->districtsIn($region);
 
         if ($districts === []) {
-            throw new UnexpectedValueException("No districts found for region: $region");
+            throw new \UnexpectedValueException("No districts found for region: $region");
         }
 
         return $districts[array_rand($districts)];
@@ -123,7 +122,7 @@ class GeographyRepository
         $communes = $this->communesIn($region, $district);
 
         if ($communes === []) {
-            throw new UnexpectedValueException("No communes found for district: $district in region $region");
+            throw new \UnexpectedValueException("No communes found for district: $district in region $region");
         }
 
         return $communes[array_rand($communes)];
@@ -149,7 +148,7 @@ class GeographyRepository
         $fokontany = $this->fokontanyIn($region, $district, $commune);
 
         if ($fokontany === []) {
-            throw new UnexpectedValueException("No fokontany found for commune: $commune");
+            throw new \UnexpectedValueException("No fokontany found for commune: $commune");
         }
 
         return $fokontany[array_rand($fokontany)];
@@ -166,7 +165,7 @@ class GeographyRepository
         $resolved = $this->resolveRegion($region);
         $active = Config::get('active_regions', []);
 
-        if (is_array($active) && $active !== [] && ! in_array($resolved, $this->regions(), true)) {
+        if (is_array($active) && $active !== [] && !in_array($resolved, $this->regions(), true)) {
             throw new InvalidArgumentException("Region is not in active_regions config: $resolved");
         }
 

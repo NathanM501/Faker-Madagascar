@@ -9,7 +9,9 @@ use Manguithre\FakerMadagascar\ValueObjects\MalagasyAddress;
 
 class AddressGenerator
 {
-    public function __construct(private GeographyRepository $geography = new GeographyRepository) {}
+    public function __construct(private GeographyRepository $geography = new GeographyRepository())
+    {
+    }
 
     public function address(): MalagasyAddress
     {

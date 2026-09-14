@@ -40,3 +40,22 @@ jobs:
 
       - name: Run tests
         run: vendor/bin/pest
+
+  cs:
+    name: Code style
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          coverage: none
+
+      - name: Install dependencies
+        run: composer update --no-interaction --prefer-dist --no-progress
+
+      - name: Check code style
+        run: vendor/bin/php-cs-fixer check --diff

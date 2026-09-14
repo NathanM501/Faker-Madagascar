@@ -23,7 +23,7 @@ use Manguithre\FakerMadagascar\Generators\AddressGenerator;
 use Manguithre\FakerMadagascar\Generators\ContactGenerator;
 use Manguithre\FakerMadagascar\Generators\PersonGenerator;
 
-if (! function_exists('fakerMg')) {
+if (!function_exists('fakerMg')) {
     /**
      * Get a FakerMadagascar instance.
      *
@@ -45,9 +45,9 @@ if (! function_exists('fakerMg')) {
         }
 
         return new FakerMadagascar(
-            new AddressGenerator,
-            new PersonGenerator,
-            new ContactGenerator,
+            new AddressGenerator(),
+            new PersonGenerator(),
+            new ContactGenerator(),
         );
     }
 }

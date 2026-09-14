@@ -20,7 +20,7 @@ class FakerMadagascarServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(
             __DIR__ . '/../config/faker-madagascar.php',
-            'faker-madagascar'
+            'faker-madagascar',
         );
 
         // Optional FakerPHP bridge: only wired when fakerphp/faker is
@@ -33,7 +33,7 @@ class FakerMadagascarServiceProvider extends ServiceProvider
         if (class_exists(Factory::class) && class_exists(Generator::class)) {
             $this->app->afterResolving(function ($object, $app) {
                 if ($object instanceof Generator) {
-                    if (! in_array($app->make(MalagasyProvider::class), $object->getProviders(), true)) {
+                    if (!in_array($app->make(MalagasyProvider::class), $object->getProviders(), true)) {
                         $object->addProvider($app->make(MalagasyProvider::class));
                     }
                 }

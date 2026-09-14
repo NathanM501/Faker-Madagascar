@@ -16,7 +16,9 @@ use Manguithre\FakerMadagascar\ValueObjects\MalagasyAddress;
  */
 class MalagasyProvider
 {
-    public function __construct(protected FakerMadagascar $fakerMadagascar) {}
+    public function __construct(protected FakerMadagascar $fakerMadagascar)
+    {
+    }
 
     public function malagasyAddress(?string $region = null): MalagasyAddress
     {
