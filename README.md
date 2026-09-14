@@ -1,11 +1,20 @@
 # Faker Madagascar
 
-[![Tests](https://github.com/manguithre/faker-madagascar/actions/workflows/tests.yml/badge.svg)](https://github.com/manguithre/faker-madagascar/actions)
+[![Tests](https://github.com/NathanM501/Faker-Madagascar/actions/workflows/tests.yml/badge.svg)](https://github.com/NathanM501/Faker-Madagascar/actions/workflows/tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PHP Version](https://img.shields.io/badge/php-%3E%3D8.2-blue.svg)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/laravel-10%7C11%7C12%7C13-red.svg)](https://laravel.com)
 
-A Laravel package for generating localized fake data for Madagascar, inspired by FakerPHP.
+A Laravel package for generating realistic fake data for Madagascar — addresses
+(23 regions, 119 districts, 1 704 communes, 19 328 real fokontany), Malagasy
+names, operator-valid phone numbers and CIN numbers. Inspired by FakerPHP:
+if you know `fake()`, you already know how to use it.
+
+## Requirements
+
+- PHP 8.2+
+- Laravel 10, 11, 12 or 13
+- Optionally [FakerPHP](https://github.com/fakerphp/faker) `^1.21` for the `fake()->malagasy*()` bridge (Composer installs it automatically if missing)
 
 ## Installation
 
@@ -13,15 +22,32 @@ A Laravel package for generating localized fake data for Madagascar, inspired by
 composer require manguithre/faker-madagascar
 ```
 
-## Usage
+The service provider and the `FakerMg` alias are auto-discovered by Laravel —
+there is nothing to register manually. The `fakerMg()` helper is available
+everywhere, immediately.
 
-### Via Helper (recommended)
-
-Like Laravel's `fake()` helper, the package ships an `fakerMg()` helper:
+## Quick start
 
 ```php
-fakerMg()->address();
-fakerMg()->region();
+use Manguithre\FakerMadagascar\FakerMadagascar;
+
+$address = fakerMg()->address();
+
+echo $address;              // Alakamisy Fenoarivo, Antananarivo Atsimondrano, ANALAMANGA, Ankadivory
+echo fakerMg()->fullName(); // e.g. Jarinala Rabeantoandro
+echo fakerMg()->phoneNumber(); // e.g. 0321234567
+echo fakerMg()->cin();         // e.g. 01010001
+```
+
+## Usage styles
+
+Pick whichever feels natural — they all resolve to the same singleton inside Laravel.
+
+### Via the `fakerMg()` helper (recommended)
+
+```php
+fakerMg()->address();          // MalagasyAddress DTO
+fakerMg()->region();           // e.g. ANALAMANGA
 
 // Person
 fakerMg()->firstName();
@@ -29,78 +55,87 @@ fakerMg()->lastName();
 fakerMg()->fullName();
 
 // Contact
-fakerMg()->phoneNumber();
+fakerMg()->phoneNumber();          // 10 digits, starts with 0
 fakerMg()->phoneNumber('telma');   // 034 / 038 only
-fakerMg()->cin();
-
-// FakerPHP bridge: `fake()` gives you BOTH standard FakerPHP data
-// AND the malagasy* methods in the same call chain:
-fake()->malagasyFullName();       // Malagasy data
-fake()->name();                   // standard FakerPHP data
+fakerMg()->cin();                  // respects the cin_format config
 ```
 
-Works in routes, seeders, factories, tinker — anywhere `fake()` works. Inside a Laravel app it resolves the container singleton (config applies); in plain PHP projects it falls back to a standalone instance.
+Works in routes, controllers, seeders, factories, tinker and commands.
 
-### Via Facade
+### Via the facade
 
 ```php
-use FakerMg;
+use FakerMg; // no import needed on Laravel 11+, where aliases are global
 
-FakerMg::address(); // same methods as the helper
+FakerMg::address();
+FakerMg::phoneNumber();
 ```
 
-### Via Injection
+On Laravel 10, add the alias to `config/app.php` if it was not published
+automatically: `'FakerMg' => Manguithre\FakerMadagascar\Facades\FakerMg::class`.
+
+### Via dependency injection
 
 ```php
 use Manguithre\FakerMadagascar\FakerMadagascar;
 
 public function run(FakerMadagascar $faker): void
 {
-    Employee::factory()->count(50)->create([
-        'address' => (string) $faker->address(),
-        'name' => $faker->fullName(),
-        'phone' => $faker->phoneNumber(),
-        'cin' => $faker->cin(),
-    ]);
+    dump($faker->address(region: 'Atsinanana'));
 }
 ```
 
-### Via FakerPHP
+### Via FakerPHP (`fake()->malagasy*()`)
 
-The package auto-registers a provider on Laravel's Faker generator,
-so all `malagasy*` methods are available in factories and seeders:
+If FakerPHP is installed, the package auto-registers a provider on Laravel's
+Faker generator — mixing standard and Malagasy data in the same call chain:
 
 ```php
-$faker->malagasyAddress();       // MalagasyAddress DTO
-$faker->malagasyRegion();
-$faker->malagasyDistrict('ANALAMANGA');
-$faker->malagasyFullName();
-$faker->malagasyPhoneNumber();
-$faker->malagasyCin();
+fake()->name();                 // standard FakerPHP data
+fake()->malagasyFullName();     // Malagasy data
+fake()->malagasyAddress();      // MalagasyAddress DTO
+fake()->malagasyPhoneNumber();
+fake()->malagasyCin();
 ```
+
+## Generating data
 
 ### Address
 
 ```php
-// Get a full address DTO
 $address = fakerMg()->address();
 
-echo $address->region;        // e.g. ANALAMANGA
-echo $address->district;      // e.g. Antananarivo Atsimondrano
-echo $address->commune;       // e.g. Alakamisy Fenoarivo
-echo $address->fokontany;     // e.g. Ankadivory
+echo $address->region;      // e.g. ANALAMANGA (region names are UPPERCASE in the data set)
+echo $address->district;    // e.g. Antananarivo Atsimondrano
+echo $address->commune;     // e.g. Alakamisy Fenoarivo
+echo $address->fokontany;   // e.g. Ankadivory (real fokontany names)
 
-echo (string) $address;       // Alakamisy Fenoarivo, Antananarivo Atsimondrano, ANALAMANGA, Ankadivory
+echo (string) $address;     // "commune, district, region, fokontany"
+print_r($address->toArray());
 
-// Force a specific region (children are consistent)
+// Force a specific region — children (district, commune, fokontany) stay consistent.
+// Region names are case-insensitive: 'Analamanga' == 'analamanga' == 'ANALAMANGA'.
 $address = fakerMg()->address(region: 'Atsinanana');
 
-// Force district or commune
-fakerMg()->addressInDistrict('Analamanga', 'Antananarivo Atsimondrano');
-fakerMg()->addressInCommune('Analamanga', 'Antananarivo Atsimondrano', 'Alakamisy Fenoarivo');
+// Force deeper levels
+fakerMg()->addressInDistrict('ANALAMANGA', 'Antananarivo Atsimondrano');
+fakerMg()->addressInCommune('ANALAMANGA', 'Antananarivo Atsimondrano', 'Alakamisy Fenoarivo');
 ```
 
-Region names are case-insensitive: `'Analamanga'`, `'analamanga'` and `'ANALAMANGA'` all resolve to `ANALAMANGA`.
+> Region names are resolved case-insensitively. District and commune names must
+> match the data set (e.g. `'Antananarivo Atsimondrano'`, not `'antananarivo atsimondrano'`).
+> Unknown names throw `Manguithre\FakerMadagascar\Exceptions\InvalidArgumentException`.
+
+Browsing the hierarchy directly:
+
+```php
+fakerMg()->region();                                  // one random region
+fakerMg()->districts('ANALAMANGA');                   // list of districts
+fakerMg()->district('ANALAMANGA');                    // one random district
+fakerMg()->communes('ANALAMANGA', 'Antananarivo Atsimondrano');
+fakerMg()->commune('ANALAMANGA', 'Antananarivo Atsimondrano');   // one random commune
+fakerMg()->fokontany('ANALAMANGA', 'Antananarivo Atsimondrano', 'Alakamisy Fenoarivo');
+```
 
 ### Person
 
@@ -110,29 +145,76 @@ fakerMg()->lastName();  // e.g. Randramanana
 fakerMg()->fullName();  // e.g. Jarinala Rabeantoandro
 ```
 
+Names are built from Malagasy syllable patterns, so they look and feel Malagasy.
+
 ### Contact
 
 ```php
-// Phone number with verified Malagasy mobile prefixes
+// Phone numbers use verified Malagasy mobile prefixes only:
 // 032/037 (Orange), 033/035 (Airtel), 034/038 (Telma/Yas), 039 (bip)
-fakerMg()->phoneNumber(); // e.g. 0321234567
+fakerMg()->phoneNumber();            // e.g. 0321234567
+fakerMg()->phoneNumber('airtel');    // 033 / 035 only
+fakerMg()->phonePrefixes();          // ['032', '033', '034', '035', '037', '038', '039']
 
-// Restrict to one operator
-fakerMg()->phoneNumber('airtel'); // 033 / 035 only
-
-// List the verified prefixes
-fakerMg()->phonePrefixes(); // ['032', '033', '034', '035', '037', '038', '039']
-
-// CIN (Carte d'Identité Nationale)
-// Format: BUREAU_YEAR_SEQUENCE (8 digits) or BUREAU-YEAR-SEQUENCE (separated)
-config(['faker-madagascar.cin_format' => 'separated']);
-fakerMg()->cin(); // e.g. 01-24-0001
+// CIN (Carte d'Identité Nationale): BUREAU_YEAR_SEQUENCE
+fakerMg()->cin();                    // e.g. 01010001 or 01-01-0001 (per cin_format config)
 ```
 
 Prefixes are verified against the [ARTEC national numbering plan](https://www.artec.mg/plan-national-de-numerotation/),
 ITU/Wikipedia numbering tables and Airtel Madagascar's June 2026 announcement of the 035 prefix.
 
-### Validation Rules
+## Laravel factories and seeders
+
+The classic FakerPHP pattern works — put `fakerMg()` calls in a factory
+definition so **every row gets fresh values**:
+
+```php
+// database/factories/EmployeeFactory.php
+class EmployeeFactory extends Factory
+{
+    public function definition(): array
+    {
+        return [
+            'first_name' => fakerMg()->firstName(),
+            'last_name'  => fakerMg()->lastName(),
+            'phone'      => fakerMg()->phoneNumber(),
+            'cin'        => fakerMg()->cin(),
+            'address'    => (string) fakerMg()->address(region: 'Analamanga'),
+        ];
+    }
+}
+
+// Anywhere:
+Employee::factory()->count(100)->create();
+```
+
+⚠️ Don't compute the values once and reuse them inside `->create([...])` —
+that would give every row the same data. Call `fakerMg()` per row (factory
+definitions, or a loop in a seeder).
+
+Seeder with a loop:
+
+```php
+use Illuminate\Database\Seeder;
+
+class EmployeeSeeder extends Seeder
+{
+    public function run(): void
+    {
+        for ($i = 0; $i < 100; $i++) {
+            Employee::create([
+                'first_name' => fakerMg()->firstName(),
+                'last_name'  => fakerMg()->lastName(),
+                'address'    => (string) fakerMg()->address(region: 'Analamanga'),
+                'phone'      => fakerMg()->phoneNumber(),
+                'cin'        => fakerMg()->cin(),
+            ]);
+        }
+    }
+}
+```
+
+## Validation rules
 
 ```php
 use Manguithre\FakerMadagascar\Rules\MalagasyPhoneNumber;
@@ -140,13 +222,15 @@ use Manguithre\FakerMadagascar\Rules\MalagasyCin;
 
 $request->validate([
     'telephone' => ['required', new MalagasyPhoneNumber()],
-    'cin' => ['required', new MalagasyCin()],
+    'cin'       => ['required', new MalagasyCin()],
 ]);
 ```
 
-The rules accept separators and the +261 country code (e.g. `+261 32 12 345 67`).
+- `MalagasyPhoneNumber` accepts separators and the +261 country code
+  (e.g. `+261 32 12 345 67`, `032 12 345 67`) and validates the operator prefix.
+- `MalagasyCin` validates the 8-digit bureau/year/sequence structure.
 
-### Artisan Command
+## Artisan command
 
 ```bash
 # Generate 10 random addresses
@@ -163,51 +247,61 @@ php artisan fakermg:preview --count=10 --type=address --export=json
 php artisan fakermg:preview --count=10 --type=contact --export=csv
 ```
 
-### Seeder Example
-
-```php
-use Illuminate\Database\Seeder;
-
-class EmployeeSeeder extends Seeder
-{
-    public function run(): void
-    {
-        Employee::factory()
-            ->count(100)
-            ->create([
-                'first_name' => fakerMg()->firstName(),
-                'last_name' => fakerMg()->lastName(),
-                'address' => (string) fakerMg()->address(region: 'Analamanga'),
-                'phone' => fakerMg()->phoneNumber(),
-                'cin' => fakerMg()->cin(),
-            ]);
-    }
-}
-```
-
 ## Configuration
 
-The package publishes a config file at `config/faker-madagascar.php`:
+Publish the config file:
+
+```bash
+php artisan vendor:publish --tag=faker-madagascar-config
+```
 
 ```php
+// config/faker-madagascar.php
 return [
+    // Restrict generation to specific regions. Empty = all 23 regions.
     'active_regions' => [],
+
+    // CIN format: 'compact' (01010001), 'separated' (01-01-0001), 'auto' (random per call)
     'cin_format' => 'auto',
 ];
 ```
 
-### active_regions
+- With `active_regions` set (e.g. `['Analamanga', 'Atsinanana']`), random generation
+  only picks those regions, and forcing an inactive region
+  (`fakerMg()->address(region: 'Diana')`) throws
+  `Manguithre\FakerMadagascar\Exceptions\InvalidArgumentException`.
+- Region names in the config are case-insensitive.
 
-Restrict generated data to specific regions. Leave empty for all regions.
-Names are case-insensitive.
+## Using the package outside Laravel
 
-When set, forcing a region outside this list — e.g. `fakerMg()->address(region: 'X')` —
-throws `Manguithre\FakerMadagascar\Exceptions\InvalidArgumentException`.
+The core works in plain PHP too — the helper falls back to a standalone instance:
 
-### cin_format
+```php
+require 'vendor/autoload.php';
 
-Choose CIN format: `compact` (8 digits), `separated` (XX-XX-XXXX) or `auto` (random per call).
-Any other value throws `InvalidArgumentException`.
+$address = fakerMg()->address(); // works, no Laravel needed
+```
+
+## Testing this package in a fresh Laravel app
+
+```bash
+composer create-project laravel/laravel demo-fakermg
+cd demo-fakermg
+
+composer config repositories.fakermg path ../Faker-Madagascar
+composer require manguithre/faker-madagascar:@dev
+```
+
+Then in `routes/web.php`:
+
+```php
+Route::get('/test', fn () => [
+    'address' => (string) fakerMg()->address(),
+    'person'  => fakerMg()->fullName(),
+    'phone'   => fakerMg()->phoneNumber(),
+    'cin'     => fakerMg()->cin(),
+]);
+```
 
 ## Testing
 
@@ -217,9 +311,10 @@ composer test
 
 ## Credits
 
-Geography data (23 regions, 119 districts, 1704 communes, 19 328 fokontany) sourced from
-[julkwel/madagascar-map](https://github.com/julkwel/madagascar-map) (MIT License).
-Rebuild the data set with `php build-geography.php` after updating the source files.
+- Geography data (23 regions, 119 districts, 1 704 communes, 19 328 fokontany)
+  from [julkwel/madagascar-map](https://github.com/julkwel/madagascar-map) (MIT License).
+  Rebuild the data set with `php build-geography.php` after updating the source files.
+- Phone prefixes verified against ARTEC, the Malagasy telecom regulator.
 
 ## License
 

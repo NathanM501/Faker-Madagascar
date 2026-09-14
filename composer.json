@@ -6,7 +6,11 @@
     "faker",
     "madagascar",
     "generator",
-    "localized"
+    "localized",
+    "fokontany",
+    "cin",
+    "seeder",
+    "malagasy"
   ],
   "license": "MIT",
   "authors": [
