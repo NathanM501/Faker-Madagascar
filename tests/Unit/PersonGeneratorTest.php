@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Manguithre\FakerMadagascar\Tests\Unit;
 
+use Manguithre\FakerMadagascar\Data\NameRepository;
 use Manguithre\FakerMadagascar\Generators\PersonGenerator;
 use Manguithre\FakerMadagascar\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
@@ -20,30 +21,34 @@ final class PersonGeneratorTest extends TestCase
     }
 
     #[Test]
-    public function it_generates_a_first_name(): void
+    public function it_generates_a_first_name_from_the_repository(): void
     {
         $name = $this->generator->firstName();
 
         $this->assertNotEmpty($name);
-        $this->assertGreaterThanOrEqual(3, strlen($name));
+        $this->assertContains($name, NameRepository::firstNames());
     }
 
     #[Test]
-    public function it_generates_a_last_name(): void
+    public function it_generates_a_last_name_from_the_repository(): void
     {
         $name = $this->generator->lastName();
 
         $this->assertNotEmpty($name);
-        $this->assertGreaterThanOrEqual(3, strlen($name));
+        $this->assertContains($name, NameRepository::lastNames());
     }
 
     #[Test]
-    public function it_generates_a_full_name(): void
+    public function it_generates_a_full_name_combining_first_and_last(): void
     {
         $name = $this->generator->fullName();
 
-        $this->assertNotEmpty($name);
         $this->assertStringContainsString(' ', $name);
+
+        [$firstName, $lastName] = explode(' ', $name, 2);
+
+        $this->assertContains($firstName, NameRepository::firstNames());
+        $this->assertContains($lastName, NameRepository::lastNames());
     }
 
     #[Test]
@@ -56,5 +61,18 @@ final class PersonGeneratorTest extends TestCase
         }
 
         $this->assertGreaterThan(1, count(array_unique($names)), 'Expected some variety across 20 full names');
+    }
+
+    #[Test]
+    public function repository_exposes_a_sizeable_pool_of_unique_names(): void
+    {
+        $firstNames = NameRepository::firstNames();
+        $lastNames = NameRepository::lastNames();
+
+        $this->assertSame(count($firstNames), count(array_unique($firstNames)), 'First names should be unique');
+        $this->assertSame(count($lastNames), count(array_unique($lastNames)), 'Last names should be unique');
+
+        $this->assertGreaterThanOrEqual(50, count($firstNames));
+        $this->assertGreaterThanOrEqual(50, count($lastNames));
     }
 }
