@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Manguithre\FakerMadagascar\Generators;
 
 use Manguithre\FakerMadagascar\Data\PhonePrefixRepository;
+use Manguithre\FakerMadagascar\Exceptions\InvalidArgumentException;
 
 class ContactGenerator
 {
@@ -19,7 +20,7 @@ class ContactGenerator
             : PhonePrefixRepository::all();
 
         if ($prefixes === []) {
-            throw new \InvalidArgumentException("Unknown operator: $operator");
+            throw new InvalidArgumentException("Unknown operator: $operator");
         }
 
         $prefix = $prefixes[array_rand($prefixes)];

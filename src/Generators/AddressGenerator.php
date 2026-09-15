@@ -65,17 +65,17 @@ class AddressGenerator
         return $this->geography->randomFokontanyIn($region, $district, $commune);
     }
 
-    public function districtsIn(string $region): array
+    public function districts(string $region): array
     {
         return $this->geography->districtsIn($region);
     }
 
-    public function communesIn(string $region, string $district): array
+    public function communes(string $region, string $district): array
     {
         return $this->geography->communesIn($region, $district);
     }
 
-    public function fokontanyIn(string $region, string $district, string $commune): array
+    public function fokontany(string $region, string $district, string $commune): array
     {
         return $this->geography->fokontanyIn($region, $district, $commune);
     }

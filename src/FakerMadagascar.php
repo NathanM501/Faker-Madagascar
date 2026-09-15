@@ -41,7 +41,7 @@ class FakerMadagascar
 
     public function districts(string $region): array
     {
-        return $this->addressGenerator->districtsIn($region);
+        return $this->addressGenerator->districts($region);
     }
 
     public function district(string $region): string
@@ -51,7 +51,7 @@ class FakerMadagascar
 
     public function communes(string $region, string $district): array
     {
-        return $this->addressGenerator->communesIn($region, $district);
+        return $this->addressGenerator->communes($region, $district);
     }
 
     public function commune(string $region, string $district): string
