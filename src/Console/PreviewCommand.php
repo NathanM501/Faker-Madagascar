@@ -31,12 +31,20 @@ class PreviewCommand extends Command
         $rows = [];
 
         for ($i = 0; $i < $count; ++$i) {
+            if ($type === 'person') {
+                $first = $this->fakerMadagascar->firstName();
+                $last = $this->fakerMadagascar->lastName();
+
+                $rows[] = [
+                    'First name' => $first,
+                    'Last name' => $last,
+                    'Full name' => $first . ' ' . $last,
+                ];
+
+                continue;
+            }
+
             $rows[] = match ($type) {
-                'person' => [
-                    'First name' => $this->fakerMadagascar->firstName(),
-                    'Last name' => $this->fakerMadagascar->lastName(),
-                    'Full name' => $this->fakerMadagascar->fullName(),
-                ],
                 'contact' => [
                     'Phone' => $this->fakerMadagascar->phoneNumber(),
                     'CIN' => $this->fakerMadagascar->cin(),
