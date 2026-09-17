@@ -199,6 +199,7 @@ $faker->malagasyAddress();
 | `addressInDistrict($region, $district)`          | Generates an address inside a district.        | `MalagasyAddress` |
 | `addressInCommune($region, $district, $commune)` | Generates an address inside a commune.         | `MalagasyAddress` |
 | `region()`                                       | Returns a random region.                       | `string`          |
+| `regions()`                                      | Returns all region names.                      | `array`           |
 | `districts($region)`                             | Lists the districts of a region.               | `array`           |
 | `district($region)`                              | Returns a random district in a region.         | `string`          |
 | `communes($region, $district)`                   | Lists the communes of a district.              | `array`           |

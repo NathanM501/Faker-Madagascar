@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`build-geography.php`**: maintenance script for rebuilding geography data. Only the maintainer needs it; not included in releases.
 
 ### Added
+- **`fakerMg()->regions()`**: returns all 23 region names as a list. Respects the `active_regions` config.
+- **PHPDoc**: all public methods of `FakerMadagascar` now have complete `@return`, `@param` and `@throws` annotations.
+- **Config tests**: dedicated `ConfigTest` covering default values and Laravel config resolution.
 - **`fakerMg()` helper** (inspired by Laravel's `fake()`): `fakerMg()->address()`, `fakerMg()->phoneNumber()`, etc. Resolves the container singleton inside Laravel; falls back to a standalone instance in plain PHP. `composer.json` now autoloads `src/helpers.php` under `files`.
 - **Laravel 13 support** (`illuminate/*` `^13.0`, `orchestra/testbench` `^11.0`, Pest `^3|^4|^5`).
 - `MalagasyPhoneNumber` rule now accepts the `+261` country code (e.g. `+261 32 12 345 67`), as documented.
