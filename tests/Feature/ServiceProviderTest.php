@@ -56,6 +56,7 @@ final class ServiceProviderTest extends TestCase
         $this->assertContains('malagasyAddress', $methods);
         $this->assertContains('malagasyFullName', $methods);
         $this->assertContains('malagasyPhoneNumber', $methods);
+        $this->assertContains('malagasyRegions', $methods);
     }
 
     #[Test]
@@ -67,5 +68,16 @@ final class ServiceProviderTest extends TestCase
 
         $this->assertNotEmpty($address->region);
         $this->assertMatchesRegularExpression('/^0(32|33|34|35|37|38|39)\d{7}$/', $faker->malagasyPhoneNumber());
+    }
+
+    #[Test]
+    public function it_exposes_malagasy_regions(): void
+    {
+        $faker = $this->app->make(Generator::class);
+
+        $regions = $faker->malagasyRegions();
+
+        $this->assertCount(23, $regions);
+        $this->assertContains('ANALAMANGA', $regions);
     }
 }

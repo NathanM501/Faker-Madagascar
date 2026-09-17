@@ -88,4 +88,13 @@ final class FakerMadagascarTest extends TestCase
         $this->assertNotEmpty($this->faker->commune('ANALAMANGA', 'Antananarivo Atsimondrano'));
         $this->assertNotEmpty($this->faker->fokontany('ANALAMANGA', 'Antananarivo Atsimondrano', 'Alakamisy Fenoarivo'));
     }
+
+    #[Test]
+    public function it_exposes_all_regions(): void
+    {
+        $regions = $this->faker->regions();
+
+        $this->assertCount(23, $regions);
+        $this->assertContains('ANALAMANGA', $regions);
+    }
 }

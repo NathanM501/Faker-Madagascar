@@ -79,4 +79,9 @@ class AddressGenerator
     {
         return $this->geography->fokontanyIn($region, $district, $commune);
     }
+
+    public function regions(): array
+    {
+        return $this->geography->regions();
+    }
 }

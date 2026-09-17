@@ -12,7 +12,7 @@ use Manguithre\FakerMadagascar\ValueObjects\MalagasyAddress;
  *
  *     $faker->addProvider(new MalagasyProvider($fakerMadagascar));
  *     $faker->malagasyAddress();
- *     $faker->malagasyFullName();
+ *     $faker->malagasyRegions();
  */
 class MalagasyProvider
 {
@@ -28,6 +28,14 @@ class MalagasyProvider
     public function malagasyRegion(): string
     {
         return $this->fakerMadagascar->region();
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function malagasyRegions(): array
+    {
+        return $this->fakerMadagascar->regions();
     }
 
     public function malagasyDistrict(string $region): string
