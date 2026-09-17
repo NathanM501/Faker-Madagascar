@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `MalagasyPhoneNumber` rule now accepts the `+261` country code (e.g. `+261 32 12 345 67`), as documented.
 
 ### Changed
-- **Name generation**: `firstName()` and `lastName()` now return real Malagasy names from curated data sets (102 first names, 103 last names) instead of syllable combinations, producing more realistic and recognizable Malagasy names.
+- **Name generation**: `firstName()` and `lastName()` now return real Malagasy names from curated data sets (101 first names, 102 last names) instead of syllable combinations, producing more realistic and recognizable Malagasy names.
 - **Laravel 11+ only**: Laravel 10 support has been dropped (`illuminate/*` `^11.0|^12.0|^13.0`, `orchestra/testbench` `^9|^10|^11`). The CI matrix is now PHP 8.2/8.3/8.4 × Laravel 11/12/13, and the `FakerMg` alias works everywhere out of the box (global aliases exist since Laravel 11).
 - **Real fokontany data**: the 1 704 synthetic `FOKONTANY-*` placeholders were replaced by the **20 688 real fokontany** from [julkwel/madagascar-map](https://github.com/julkwel/madagascar-map). Every generated address is now fully real down to the fokontany level. Rebuild with `php build-geography.php`.
 - **`fakerphp/faker` is now optional** (`suggest` instead of `require`): the core generators no longer depend on it. The `fake()->malagasy*()` bridge auto-wires only when FakerPHP is installed.

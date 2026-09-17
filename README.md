@@ -64,20 +64,19 @@ Laravel package discovery. No manual registration is required.
 
 The `fakerMg()` helper is available immediately after installation.
 
-Laravel supports package auto-discovery through the package's Composer
-configuration, allowing service providers and facade aliases to be registered
-automatically. [16]
-
 ## Quick start
+
+After installing the package, use the `fakerMg()` helper anywhere in your
+Laravel application:
 
 ```php
 $address = fakerMg()->address();
 
-echo $address;
+echo (string) $address;
 // Alakamisy Fenoarivo, Antananarivo Atsimondrano, ANALAMANGA, Ankadivory
 
 echo fakerMg()->fullName();
-// Jarinala Rabeantoandro
+// Hery Rakotomalala
 
 echo fakerMg()->phoneNumber();
 // 0321234567
@@ -101,13 +100,13 @@ fakerMg()->region();
 // ANALAMANGA
 
 fakerMg()->firstName();
-// Andrata
+// Hery
 
 fakerMg()->lastName();
-// Randramanana
+// Rakotomalala
 
 fakerMg()->fullName();
-// Jarinala Rabeantoandro
+// Hery Rakotomalala
 
 fakerMg()->phoneNumber();
 // 0321234567
@@ -132,6 +131,8 @@ The helper works in:
 ### Using the facade
 
 ```php
+use Manguithre\FakerMadagascar\Facades\FakerMg;
+
 FakerMg::address();
 
 FakerMg::phoneNumber();
@@ -139,12 +140,8 @@ FakerMg::phoneNumber();
 FakerMg::fullName();
 ```
 
-If your project requires an explicit facade import, use the namespace exposed
-by the package:
-
-```php
-use Manguithre\FakerMadagascar\Facades\FakerMg;
-```
+Laravel registers the facade alias automatically when package discovery is
+enabled.
 
 ### Using dependency injection
 
@@ -177,28 +174,42 @@ fake()->malagasyPhoneNumber();
 fake()->malagasyCin();
 ```
 
-> **Note**: this bridge only works when Faker's Generator is resolved from the Laravel container (via `fake()`). Using `Faker\Factory::create()` directly won't attach the provider — use `app(Faker\Generator::class)` or the `fake()` helper instead.
+> **Note:** The `malagasy*()` methods are available when Faker's generator is
+> resolved through Laravel's container, for example with `fake()` or
+> `app(Faker\Generator::class)`. A generator created directly with
+> `Faker\Factory::create()` does not automatically include this provider.
+
+Example:
+
+```php
+use Faker\Generator;
+
+$faker = app(Generator::class);
+
+$faker->malagasyFullName();
+$faker->malagasyAddress();
+```
 
 ## API reference
 
-| Method                         | Description                                      | Return value      |
-| ------------------------------ | ------------------------------------------------ | ----------------- |
-| `address()`                    | Generates a random hierarchical address.         | `MalagasyAddress` |
-| `address(region: ...)`         | Generates an address inside a specific region.   | `MalagasyAddress` |
-| `addressInDistrict(...)`       | Generates an address inside a specific district. | `MalagasyAddress` |
-| `addressInCommune(...)`        | Generates an address inside a specific commune.  | `MalagasyAddress` |
-| `region()`                     | Returns a random region.                         | `string`          |
-| `districts($region)`           | Lists the districts of a region.                 | `array`           |
-| `district($region)`            | Returns a random district in a region.           | `string`          |
-| `communes($region, $district)` | Lists the communes of a district.                | `array`           |
-| `commune($region, $district)`  | Returns a random commune in a district.          | `string`          |
-| `fokontany(...)`               | Returns a random fokontany.                      | `string`          |
-| `firstName()`                  | Generates a Malagasy first name.                 | `string`          |
-| `lastName()`                   | Generates a Malagasy last name.                  | `string`          |
-| `fullName()`                   | Generates a Malagasy full name.                  | `string`          |
-| `phoneNumber()`                | Generates a Malagasy mobile number.              | `string`          |
-| `phonePrefixes()`              | Returns the supported mobile prefixes.           | `array`           |
-| `cin()`                        | Generates a 12-digit CIN-formatted value.        | `string`          |
+| Method                                           | Description                                    | Return value      |
+| ------------------------------------------------ | ---------------------------------------------- | ----------------- |
+| `address()`                                      | Generates a random hierarchical address.       | `MalagasyAddress` |
+| `address(region: ...)`                           | Generates an address inside a specific region. | `MalagasyAddress` |
+| `addressInDistrict($region, $district)`          | Generates an address inside a district.        | `MalagasyAddress` |
+| `addressInCommune($region, $district, $commune)` | Generates an address inside a commune.         | `MalagasyAddress` |
+| `region()`                                       | Returns a random region.                       | `string`          |
+| `districts($region)`                             | Lists the districts of a region.               | `array`           |
+| `district($region)`                              | Returns a random district in a region.         | `string`          |
+| `communes($region, $district)`                   | Lists the communes of a district.              | `array`           |
+| `commune($region, $district)`                    | Returns a random commune in a district.        | `string`          |
+| `fokontany($region, $district, $commune)`        | Returns a random fokontany in a commune.       | `string`          |
+| `firstName()`                                    | Generates a Malagasy first name.               | `string`          |
+| `lastName()`                                     | Generates a Malagasy last name.                | `string`          |
+| `fullName()`                                     | Generates a Malagasy full name.                | `string`          |
+| `phoneNumber($operator = null)`                  | Generates a Malagasy mobile number.            | `string`          |
+| `phonePrefixes()`                                | Returns the supported mobile prefixes.         | `array`           |
+| `cin()`                                          | Generates a 12-digit CIN-formatted value.      | `string`          |
 
 > Return types shown above should match the actual public API of the installed
 > package version.
@@ -303,25 +314,35 @@ Manguithre\FakerMadagascar\Exceptions\InvalidArgumentException
 ```php
 fakerMg()->region();
 // ANALAMANGA
+```
 
+```php
 fakerMg()->districts('ANALAMANGA');
 // List of districts
+```
 
+```php
 fakerMg()->district('ANALAMANGA');
 // One random district
+```
 
+```php
 fakerMg()->communes(
     'ANALAMANGA',
     'Antananarivo Atsimondrano'
 );
 // List of communes
+```
 
+```php
 fakerMg()->commune(
     'ANALAMANGA',
     'Antananarivo Atsimondrano'
 );
 // One random commune
+```
 
+```php
 fakerMg()->fokontany(
     'ANALAMANGA',
     'Antananarivo Atsimondrano',
@@ -330,21 +351,51 @@ fakerMg()->fokontany(
 // One random fokontany
 ```
 
+## Address object
+
+The `address()` method returns a structured address object.
+
+Typical properties:
+
+```php
+$address->region;
+$address->district;
+$address->commune;
+$address->fokontany;
+```
+
+Convert the object to an array:
+
+```php
+$data = $address->toArray();
+```
+
+Convert the object to a formatted string:
+
+```php
+$text = (string) $address;
+```
+
+The formatted string follows this structure:
+
+```text
+commune, district, region, fokontany
+```
+
 ## Generating names
 
 ```php
 fakerMg()->firstName();
-// Andrata
+// Hery
 
 fakerMg()->lastName();
-// Randramanana
+// Rakotomalala
 
 fakerMg()->fullName();
-// Jarinala Rabeantoandro
+// Hery Rakotomalala
 ```
 
-Names are generated from curated Malagasy name lists. They are intended
-to look natural for testing and development purposes.
+Names are generated from curated Malagasy name lists. They are intended to look natural for testing and development purposes.
 
 Generated names are not guaranteed to correspond to real people.
 
@@ -365,6 +416,12 @@ fakerMg()->phoneNumber('airtel');
 
 fakerMg()->phoneNumber('telma');
 // 0341234567 or 0381234567
+
+fakerMg()->phoneNumber('orange');
+// 0321234567 or 0371234567
+
+fakerMg()->phoneNumber('bip');
+// 0391234567
 ```
 
 Supported prefixes:
@@ -385,8 +442,13 @@ The currently supported prefixes are:
 | `039`        | Bip         |
 
 Phone prefixes were checked against the ARTEC national numbering plan,
-international numbering tables and available operator announcements. The
-prefix dataset may need to be updated when the Malagasy numbering plan changes.
+international numbering tables and available operator announcements.
+
+The prefix dataset may need to be updated when the Malagasy numbering plan
+changes.
+
+Phone numbers generated by this package are intended for testing and seeding.
+They should not be used to contact real people.
 
 ### CIN values
 
@@ -403,7 +465,7 @@ The generated value contains 12 digits without separators.
 
 ## Laravel factories and seeders
 
-The package can be used directly inside Laravel factories.
+The package can be used directly inside Laravel factories:
 
 ```php
 // database/factories/EmployeeFactory.php
@@ -443,7 +505,7 @@ data.
 Avoid calculating values once and reusing them:
 
 ```php
-// Avoid this pattern if you want unique generated values.
+// Avoid this pattern if you want fresh generated values.
 $employee = [
     'first_name' => fakerMg()->firstName(),
     'last_name'  => fakerMg()->lastName(),
@@ -505,7 +567,7 @@ $request->validate([
 
 ### `MalagasyPhoneNumber`
 
-The phone validation rule accepts:
+The phone validation rule accepts formats such as:
 
 ```text
 0321234567
@@ -514,7 +576,7 @@ The phone validation rule accepts:
 +261 32 12 345 67
 ```
 
-It validates the Malagasy mobile format and the supported operator prefixes.
+It validates the Malagasy mobile format and supported operator prefixes.
 
 ### `MalagasyCin`
 
@@ -559,7 +621,7 @@ php artisan fakermg:preview \
     --type=contact
 ```
 
-### Export JSON
+### Export to JSON
 
 ```bash
 php artisan fakermg:preview \
@@ -568,7 +630,7 @@ php artisan fakermg:preview \
     --export=json
 ```
 
-### Export CSV
+### Export to CSV
 
 ```bash
 php artisan fakermg:preview \
@@ -619,7 +681,7 @@ return [
 ```
 
 With this configuration, random address generation only uses the selected
-regions.
+regions:
 
 ```php
 fakerMg()->address();
@@ -642,7 +704,7 @@ Region names in the configuration are case-insensitive:
 
 ## Using the package outside Laravel
 
-The core service can also be used in a plain PHP application.
+The core service can also be used in a plain PHP application:
 
 ```php
 <?php
@@ -657,6 +719,21 @@ echo $address;
 When Laravel is not available, the helper falls back to a standalone
 `FakerMadagascar` instance.
 
+You can also instantiate the service directly:
+
+```php
+<?php
+
+require 'vendor/autoload.php';
+
+use Manguithre\FakerMadagascar\FakerMadagascar;
+
+$faker = new FakerMadagascar();
+
+echo $faker->fullName();
+echo $faker->phoneNumber();
+```
+
 ## Testing the package in a fresh Laravel application
 
 Create a fresh Laravel application:
@@ -667,8 +744,8 @@ composer create-project laravel/laravel demo-fakermg
 cd demo-fakermg
 ```
 
-If you are testing a local checkout of the package, configure the local Composer
-repository:
+If you are testing a local checkout of the package, configure the local
+Composer repository:
 
 ```bash
 composer config repositories.fakermg path ../Faker-Madagascar
@@ -715,8 +792,8 @@ Run the test suite with:
 composer test
 ```
 
-You can also run the package tests directly if the project provides a
-PHPUnit configuration:
+You can also run the package tests directly if the project provides a PHPUnit
+configuration:
 
 ```bash
 vendor/bin/phpunit
@@ -724,7 +801,7 @@ vendor/bin/phpunit
 
 ## Data sources
 
-Geographical data includes:
+The package includes the following geographical data:
 
 - 23 regions.
 - 119 districts.
