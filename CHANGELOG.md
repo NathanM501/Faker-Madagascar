@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+- **`smoke.php`**: standalone diagnostic script. The test suite (`composer test`) covers all functionality; this file was not included in releases (`export-ignore`).
+- **`build-geography.php`**: maintenance script for rebuilding geography data. Only the maintainer needs it; not included in releases.
+
 ### Added
 - **`fakerMg()` helper** (inspired by Laravel's `fake()`): `fakerMg()->address()`, `fakerMg()->phoneNumber()`, etc. Resolves the container singleton inside Laravel; falls back to a standalone instance in plain PHP. `composer.json` now autoloads `src/helpers.php` under `files`.
 - **Laravel 13 support** (`illuminate/*` `^13.0`, `orchestra/testbench` `^11.0`, Pest `^3|^4|^5`).
